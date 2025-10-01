@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kakao Search Test</title>
+    <script src="js/axios.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrapm.min.css" />
+
+    <link rel="stylesheet" href="css/bootstrapm.min.css" />
+    <style>
+      ul,
+      li {
+        list-style: none;
+        padding: 0;
+      }
+      .wrap {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mb-3 text-center">카카오검색</h1>
+
+      <div class="row">
+        <div class="offset-md-3 col-md-6">
+          <form id="searchform" class="d-flex gap-2 mb-3">
+            <input
+              type="text"
+              name="search"
+              class="form-control search"
+              placeholder="검색어를 입력하세요"
+            />
+            <button class="btn btn-primary" style="width: 100px">검색</button>
+          </form>
+          <div id="results" class="list-group">
+            <ul>
+              <li class="text-center py-5">
+                <!-- <h4>
+                  <a href="#" class="nav-link wrap"
+                    >Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Atque, voluptates?</a
+                  >
+                </h4>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Beatae error debitis distinctio, numquam nobis esse laboriosam
+                </p>
+                <p class="d-flex justify-content-end small">
+                  <span> 025-09-15 </span>
+                </p> -->
+                입력하세요
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // document.getElementById("serchform").addEventListener("submit",function(){})
+      document
+        .getElementById("searchform")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const query = document.querySelector(".search").value.trim();
+          if (!query) {
+            alert("검색어를 입력하세요");
+          }
+          console.log(query);
+
+          try {
+            //cibst res= await axios.get('url',{headers:{},params:{}})
+            const res = await axios.get(
+              "https://dapi.kakao.com/v2/search/web",
+              {
+                headers: {
+                  Authorization: "KakaoAK 16a1c39ec495ab2cf70696411320023a",
+                },
+                params: {
+                  query: query,
+                },
+              }
+            );
+            // console.log(res.data.documents);
+
+            const data = res.data;
+            let viewData = "";
+
+            data.documents.forEach(function (item) {
+              viewData += `<li>
+                <h4>
+                    <a href="${item.url}" target="_blank" class="nav-link wrap">
+                        ${item.title}</a>
+
+                </h4>
+                    <p>${item.contents}</p>
+                    <p class=" d-flex justify-content-end small">
+                        <span>${item.datetime}</span>
+                    </p>
+                    </li>`;
+            });
+            console.log(viewData);
+
+            document.querySelector("#results>ul").innerHTML = viewData;
+          } catch (error) {}
+        });
+    </script>
+  </body>
+</html>
